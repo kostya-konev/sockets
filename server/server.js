@@ -8,9 +8,10 @@ const io = require("socket.io")(3000, {
 });
 
 const userIo = io.of('/user');
-userIo.on('connection', socket => {
+userIo.on('connection', (socket) => {
   console.log(`connected to user namespace with username ${socket.username}`);
 });
+
 userIo.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (token) {
@@ -39,6 +40,9 @@ io.on('connection', (socket) => {
     socket.join(room);
     cb(`Joined ${room}`);
   });
+  socket.on('ping', (n) => {
+    console.log(n);
+  });
 });
 
-instrument(io, { auth: false});
+instrument(io, { auth: false });
